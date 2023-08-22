@@ -14,7 +14,7 @@ import java.util.*;
 public class FilmController {
     private final HashMap<Integer, Film> films = new HashMap<>();
     private int idCounter = 1;
-    private final int MAX_DESCRIPTION_LENGTH = 200;
+    public static final int MAX_DESCRIPTION_LENGTH = 200;
     private final LocalDate earliestReleaseDate = LocalDate.of(1895, 12, 28);
 
     @GetMapping
