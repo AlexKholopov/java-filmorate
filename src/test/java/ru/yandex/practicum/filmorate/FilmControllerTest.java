@@ -17,14 +17,14 @@ public class FilmControllerTest {
 
     private final FilmController controller = new FilmController();
     private final Film emptyNameFilm = Film.builder()
-            .releaseDate(LocalDate.of(1999, 12 , 5))
+            .releaseDate(LocalDate.of(1999, 12, 5))
             .description("EmptyNameFilm")
             .id(1)
             .duration(190)
             .build();
     private final Film negativeDurationFilm = Film.builder()
             .name("Name")
-            .releaseDate(LocalDate.of(1999, 12 , 5))
+            .releaseDate(LocalDate.of(1999, 12, 5))
             .description("NegativeDurationFilm")
             .id(1)
             .duration(-5)
@@ -32,7 +32,7 @@ public class FilmControllerTest {
 
     private final Film tooMuchOldFilm = Film.builder()
             .name("Name")
-            .releaseDate(LocalDate.of(1850, 12 , 5))
+            .releaseDate(LocalDate.of(1850, 12, 5))
             .description("TooMuchOldFilm")
             .id(1)
             .duration(190)
@@ -62,12 +62,12 @@ public class FilmControllerTest {
     @Test
     public void shouldThrowTooLongFilmDescription() {
         StringBuilder longDescription = new StringBuilder("description");
-        while (longDescription.toString().length()<200) {
+        while (longDescription.toString().length() < 200) {
             longDescription.append(longDescription);
         }
         final Film tooLongDescriptionFilm = Film.builder()
                 .name("Name")
-                .releaseDate(LocalDate.of(1999, 12 , 5))
+                .releaseDate(LocalDate.of(1999, 12, 5))
                 .description(longDescription.toString())
                 .id(1)
                 .duration(190)
