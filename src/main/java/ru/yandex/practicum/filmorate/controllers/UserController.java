@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.exceptions.IncorrectUserEmailException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user){
+    public User updateUser(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
             validateUser(user);
             User userToAdd;
@@ -77,8 +76,7 @@ public class UserController {
             users.replace(userToAdd.getId(), userToAdd);
             log.debug("User successfully updated");
             return userToAdd;
-        }
-        else {
+        } else {
             throw new ValidationException("User with this id not found");
         }
     }
