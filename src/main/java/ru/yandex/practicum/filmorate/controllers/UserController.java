@@ -1,95 +1,51 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectBirthdayException;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectLoginException;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectUserEmailException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
-import java.util.Collection;
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final HashMap<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private int idCounter = 1;
 
-
     @GetMapping
-    public Collection<User> getUsers() {
-        return users.values();
+    public List<User> getUsers() {
+        log.info("getUsers is running");
+        return new ArrayList<>(users.values());
     }
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        validateUser(user);
-        User userToAdd;
-        if (user.getName() == null) {
-            userToAdd = User.builder()
-                    .id(idCounter++)
-                    .login(user.getLogin())
-                    .birthday(user.getBirthday())
-                    .email(user.getEmail())
-                    .name(user.getLogin())
-                    .build();
-        } else {
-            userToAdd = User.builder()
-                    .id(idCounter++)
-                    .login(user.getLogin())
-                    .birthday(user.getBirthday())
-                    .email(user.getEmail())
-                    .name(user.getName())
-                    .build();
-        }
+        log.info("createUser is running");
+        User userToAdd = new User(idCounter++, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
         users.put(userToAdd.getId(), userToAdd);
         return userToAdd;
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
+        log.info("updateUser is running");
         if (users.containsKey(user.getId())) {
-            validateUser(user);
-            User userToAdd;
-            if (user.getName() == null) {
-                userToAdd = User.builder()
-                        .id(user.getId())
-                        .login(user.getLogin())
-                        .birthday(user.getBirthday())
-                        .email(user.getEmail())
-                        .name(user.getLogin())
-                        .build();
-            } else {
-                userToAdd = User.builder()
-                        .id(user.getId())
-                        .login(user.getLogin())
-                        .birthday(user.getBirthday())
-                        .email(user.getEmail())
-                        .name(user.getName())
-                        .build();
-            }
-            users.replace(userToAdd.getId(), userToAdd);
-            log.debug("User successfully updated");
-            return userToAdd;
+            users.replace(user.getId(), user);
+            log.info("User successfully updated");
+            return user;
         } else {
             throw new ValidationException("User with this id not found");
-        }
-    }
-
-    private void validateUser(User user) {
-        if (user.getEmail().isBlank() || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-            throw new IncorrectUserEmailException("Email cannot be empty and must contain the @ symbol");
-        }
-        if (user.getLogin().contains(" ") || user.getLogin().isEmpty() || user.getLogin().isBlank()) {
-            throw new IncorrectLoginException("Login cannot be empty and cannot contain spaces");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new IncorrectBirthdayException("The date of birth can't be in the future");
         }
     }
 }

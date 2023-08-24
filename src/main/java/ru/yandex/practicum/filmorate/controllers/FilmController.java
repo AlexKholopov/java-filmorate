@@ -1,31 +1,37 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.LocalDate;
-import java.util.*;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final HashMap<Integer, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
     private int idCounter = 1;
-    public static final int MAX_DESCRIPTION_LENGTH = 200;
-    private final LocalDate earliestReleaseDate = LocalDate.of(1895, 12, 28);
 
     @GetMapping
-    public Collection<Film> getFilms() {
-        log.debug("");
-        return films.values();
+    public List<Film> getFilms() {
+        log.info("getFilms is running");
+        return new ArrayList<>(films.values());
     }
 
     @PostMapping
-    public Film addFilm(@RequestBody Film film) {
-        validateFilm(film);
+    public Film addFilm(@Valid @RequestBody Film film) {
+        log.info("addFilm is running");
         Film filmToAdd = Film.builder()
                 .id(idCounter++)
                 .name(film.getName())
@@ -38,8 +44,8 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film replaceFilm(@RequestBody Film film) {
-        validateFilm(film);
+    public Film replaceFilm(@Valid @RequestBody Film film) {
+        log.info("replaceFilm is running");
         if (!films.containsKey(film.getId())) {
             throw new ValidationException("Film with this id not found");
         }
@@ -54,19 +60,4 @@ public class FilmController {
         return filmToAdd;
     }
 
-
-    private void validateFilm(Film film) {
-        if (film.getName() == null || film.getName().isBlank() || film.getName().isEmpty()) {
-            throw new EmptyFilmNameException("The title of the movie should not be blank");
-        }
-        if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
-            throw new TooLongFilmDescriptionException("Movie description should be no longer than 200 characters");
-        }
-        if (film.getReleaseDate().isBefore(earliestReleaseDate)) {
-            throw new TooMuchOldMovieException("The release date must not be earlier than December 28, 1895");
-        }
-        if (film.getDuration() <= 0) {
-            throw new NegativeFilmDurationException("The duration of the movie should be positive");
-        }
-    }
 }

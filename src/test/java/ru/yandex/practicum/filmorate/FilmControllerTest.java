@@ -1,21 +1,21 @@
 package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.EmptyFilmNameException;
-import ru.yandex.practicum.filmorate.exceptions.NegativeFilmDurationException;
-import ru.yandex.practicum.filmorate.exceptions.TooLongFilmDescriptionException;
-import ru.yandex.practicum.filmorate.exceptions.TooMuchOldMovieException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class FilmControllerTest {
 
-    private final FilmController controller = new FilmController();
+    @Autowired
+    private ValidatingService service;
     private final Film emptyNameFilm = Film.builder()
             .releaseDate(LocalDate.of(1999, 12, 5))
             .description("EmptyNameFilm")
@@ -43,19 +43,19 @@ public class FilmControllerTest {
     @Test
     public void shouldThrowEmptyFilmNameException() {
         //when
-        final EmptyFilmNameException exception = assertThrows(
-                EmptyFilmNameException.class,
-                () -> controller.addFilm(emptyNameFilm));
-        assertEquals("Validation exception: The title of the movie should not be blank",
+        final ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(emptyNameFilm));
+        assertEquals("name: не должно быть пустым",
                 exception.getMessage());
     }
 
     @Test
     public void shouldThrowNegativeFilmDurationException() {
-        NegativeFilmDurationException exception = assertThrows(
-                NegativeFilmDurationException.class,
-                () -> controller.addFilm(negativeDurationFilm));
-        assertEquals("Validation exception: The duration of the movie should be positive",
+        final ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(negativeDurationFilm));
+        assertEquals("duration: должно быть не меньше 0",
                 exception.getMessage());
     }
 
@@ -72,19 +72,21 @@ public class FilmControllerTest {
                 .id(1)
                 .duration(190)
                 .build();
-        TooLongFilmDescriptionException exception = assertThrows(
-                TooLongFilmDescriptionException.class,
-                () -> controller.addFilm(tooLongDescriptionFilm));
-        assertEquals("Validation exception: Movie description should be no longer than 200 characters",
+        final ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(tooLongDescriptionFilm));
+        assertEquals("description: размер должен находиться в диапазоне от 0 до 200",
                 exception.getMessage());
     }
 
     @Test
     public void shouldThrowTooMuchOldMovieException() {
-        TooMuchOldMovieException exception = assertThrows(
-                TooMuchOldMovieException.class,
-                () -> controller.addFilm(tooMuchOldFilm));
-        assertEquals("Validation exception: The release date must not be earlier than December 28, 1895",
+        final ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(tooMuchOldFilm));
+        assertEquals("releaseDate: Validation exception: The release date must not be earlier than December 28, 1895",
                 exception.getMessage());
     }
+
+
 }

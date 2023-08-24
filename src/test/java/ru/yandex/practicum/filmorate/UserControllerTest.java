@@ -1,70 +1,58 @@
 package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controllers.UserController;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectBirthdayException;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectLoginException;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectUserEmailException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class UserControllerTest {
-    private final UserController controller = new UserController();
 
-    private final User wrongBirthdayUser = User.builder()
-            .name("Name")
-            .email("asd@mail.com")
-            .id(1)
-            .login("login")
-            .birthday(LocalDate.of(2025, 12, 31))
-            .build();
-    private final User wrongEmailUser = User.builder()
-            .name("Name")
-            .email("asdmail.com")
-            .id(1)
-            .login("login")
-            .birthday(LocalDate.of(1999, 12, 31))
-            .build();
+    @Autowired
+    private ValidatingService service;
 
-    private final User wrongLoginUser = User.builder()
-            .name("Name")
-            .email("asd@mail.com")
-            .id(1)
-            .login("log in")
-            .birthday(LocalDate.of(1999, 12, 31))
-            .build();
+    private final User wrongBirthdayUser = new User(1, "asd@mail.com", "login",
+            "Name", LocalDate.of(2025, 12, 31));
+
+    private final User wrongEmailUser = new User(1, "asdmail.com", "login",
+            "Name", LocalDate.of(1999, 12, 31));
+
+    private final User wrongLoginUser = new User(1, "asd@mail.com", "log in",
+            "Name", LocalDate.of(1999, 12, 31));
 
     @Test
     public void shouldThrowIncorrectBirthdayException() {
-        IncorrectBirthdayException exception = assertThrows(
-                IncorrectBirthdayException.class,
-                () -> controller.createUser(wrongBirthdayUser)
+        ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(wrongBirthdayUser)
         );
-        assertEquals("Validation exception: The date of birth can't be in the future",
+        assertEquals("birthday: должно содержать прошедшую дату или сегодняшнее число",
                 exception.getMessage());
     }
 
     @Test
     public void shouldThrowIncorrectUserEmailException() {
-        IncorrectUserEmailException exception = assertThrows(
-                IncorrectUserEmailException.class,
-                () -> controller.createUser(wrongEmailUser)
+        ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(wrongEmailUser)
         );
-        assertEquals("Validation exception: Email cannot be empty and must contain the @ symbol",
+        assertEquals("email: должно иметь формат адреса электронной почты",
                 exception.getMessage());
     }
 
     @Test
     public void shouldThrowIncorrectLoginException() {
-        IncorrectLoginException exception = assertThrows(
-                IncorrectLoginException.class,
-                () -> controller.createUser(wrongLoginUser)
+        ConstraintViolationException exception = assertThrows(
+                ConstraintViolationException.class,
+                () -> service.validateInputWithInjectedValidator(wrongLoginUser)
         );
-        assertEquals("Validation exception: Login cannot be empty and cannot contain spaces",
+        assertEquals("login: должно соответствовать \"^[A-Za-z0-9_]+$\"",
                 exception.getMessage());
     }
 }
