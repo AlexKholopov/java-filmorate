@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Value
 public class User {
-    public User(int id, String email, String login, String name, LocalDate birthday){
+    public User(int id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
         this.email = email;
         this.login = login;
@@ -21,6 +21,7 @@ public class User {
         }
         this.birthday = birthday;
     }
+
     int id;
     @Email
     String email;
