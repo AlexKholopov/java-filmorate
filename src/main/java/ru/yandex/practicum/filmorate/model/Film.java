@@ -13,12 +13,13 @@ import java.time.LocalDate;
 @Builder
 public class Film {
     int id;
-    @NotBlank
+    @NotBlank(message = "must not be blank")
     String name;
-    @Size(max = 200)
+    @Size(message = "size must be between 0 and 200",
+            max = 200)
     String description;
     @ReleaseDate
     LocalDate releaseDate;
-    @Min(0)
+    @Min(value = 0, message = "must be greater than or equal to 0")
     int duration;
 }

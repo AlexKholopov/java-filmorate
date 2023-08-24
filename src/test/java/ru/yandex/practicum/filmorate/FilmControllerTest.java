@@ -46,7 +46,7 @@ public class FilmControllerTest {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(emptyNameFilm));
-        assertEquals("name: не должно быть пустым",
+        assertEquals("name: must not be blank",
                 exception.getMessage());
     }
 
@@ -55,7 +55,7 @@ public class FilmControllerTest {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(negativeDurationFilm));
-        assertEquals("duration: должно быть не меньше 0",
+        assertEquals("duration: must be greater than or equal to 0",
                 exception.getMessage());
     }
 
@@ -75,7 +75,7 @@ public class FilmControllerTest {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(tooLongDescriptionFilm));
-        assertEquals("description: размер должен находиться в диапазоне от 0 до 200",
+        assertEquals("description: size must be between 0 and 200",
                 exception.getMessage());
     }
 

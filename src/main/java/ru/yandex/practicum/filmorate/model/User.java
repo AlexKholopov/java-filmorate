@@ -23,12 +23,13 @@ public class User {
     }
 
     int id;
-    @Email
+    @Email(message = "must be a well-formed email address")
     String email;
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z0-9_]+$") //надеюсь правильно) вроде \s ищет пробелы, но что с ними делает неясно
+    @Pattern(message = "must not be blank, must not contain whitespaces",
+            regexp = "^[A-Za-z0-9_]+$") //надеюсь правильно) вроде \s ищет пробелы, но что с ними делает неясно
     String login;
     String name;
-    @PastOrPresent
+    @PastOrPresent(message = "must be a date in the past or in the present")
     LocalDate birthday;
 }

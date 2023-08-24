@@ -32,7 +32,7 @@ public class UserControllerTest {
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(wrongBirthdayUser)
         );
-        assertEquals("birthday: должно содержать прошедшую дату или сегодняшнее число",
+        assertEquals("birthday: must be a date in the past or in the present",
                 exception.getMessage());
     }
 
@@ -42,7 +42,7 @@ public class UserControllerTest {
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(wrongEmailUser)
         );
-        assertEquals("email: должно иметь формат адреса электронной почты",
+        assertEquals("email: must be a well-formed email address",
                 exception.getMessage());
     }
 
@@ -52,7 +52,7 @@ public class UserControllerTest {
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(wrongLoginUser)
         );
-        assertEquals("login: должно соответствовать \"^[A-Za-z0-9_]+$\"",
+        assertEquals("login: must not be blank, must not contain whitespaces",
                 exception.getMessage());
     }
 }
