@@ -17,7 +17,7 @@ import java.util.Set;
 public class UserService {
     private final UserStorage userStorage;
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userStorage.getUsers();
     }
 
