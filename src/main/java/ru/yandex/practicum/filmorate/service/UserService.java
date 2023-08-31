@@ -23,7 +23,8 @@ public class UserService {
 
     public User getUserById(long id) {
         validateUsers(id);
-        return userStorage.getUserById(id);}
+        return userStorage.getUserById(id);
+    }
 
     public List<User> getUserFriends(long userId) {
         validateUsers(userId);

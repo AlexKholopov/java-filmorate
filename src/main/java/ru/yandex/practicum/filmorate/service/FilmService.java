@@ -66,7 +66,7 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    private void validateFilms(long filmId){
+    private void validateFilms(long filmId) {
         if (filmStorage.getFilmById(filmId) == null) {
             throw new SearchedObjectNotFoundException("Film with id = " + filmId + " not found");
         }
