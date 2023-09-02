@@ -33,35 +33,38 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film getFilmById(@Valid @PathVariable long id) {
+        log.info("Running getFilmById with id =  " + id);
         return filmService.getFilmById(id);
     }
 
     @GetMapping("/popular")
     public List<Film> getSortedFilmList(@Valid @RequestParam(name = "count",
             required = false, defaultValue = "10") long count) {
+        log.info("Running getSortedFilmList with count = " +  count);
         return filmService.getSortedFilmsList(count);
     }
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
-        log.info("addFilm is running");
+        log.info("Running createFilm");
         return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
-        log.info("replaceFilm is running");
+        log.info("Running updateFilm");
         return filmService.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public Film addLike(@Valid @PathVariable long id, @PathVariable long userId) {
+        log.info("Running addLike film id = " + id + ", user id = " + userId);
         return filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@Valid @PathVariable long id, @PathVariable long userId) {
+        log.info("Running deleteLike film id = " + id + ", user id = " + userId);
         return filmService.deleteLike(id, userId);
     }
-
 }

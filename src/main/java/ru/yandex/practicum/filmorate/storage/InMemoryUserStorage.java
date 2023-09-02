@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.SearchedObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class InMemoryUserStorage implements UserStorage {
             User user = users.get(id);
             return new User(user.getId(), user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getFriends());
         } else {
-            return null;
+            throw new SearchedObjectNotFoundException("User with id = " + id + " not found");
         }
     }
 
@@ -42,7 +42,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.replace(user.getId(), user);
             return user;
         } else {
-            throw new ValidationException("User with this id not found");
+            throw new SearchedObjectNotFoundException("User with id = " + user.getId() + " not found");
         }
     }
 }

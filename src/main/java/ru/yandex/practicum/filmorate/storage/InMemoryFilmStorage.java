@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exceptions.SearchedObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class InMemoryFilmStorage implements FilmStorage {
                     film.getDescription(), film.getReleaseDate(),
                     film.getDuration(), film.getLikesId());
         } else {
-            return null;
+            throw new SearchedObjectNotFoundException("Film with id = " + id + " not found");
         }
     }
 
