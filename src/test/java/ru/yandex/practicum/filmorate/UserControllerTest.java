@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,14 +18,14 @@ public class UserControllerTest {
     @Autowired
     private ValidatingService service;
 
-    private final User wrongBirthdayUser = new User(1, "asd@mail.com", "login",
-            "Name", LocalDate.of(2025, 12, 31));
+    private final User wrongBirthdayUser = new User(1L, "asd@mail.com", "login",
+            "Name", LocalDate.of(2025, 12, 31), Collections.emptySet());
 
-    private final User wrongEmailUser = new User(1, "asdmail.com", "login",
-            "Name", LocalDate.of(1999, 12, 31));
+    private final User wrongEmailUser = new User(1L, "asdmail.com", "login",
+            "Name", LocalDate.of(1999, 12, 31), Collections.emptySet());
 
-    private final User wrongLoginUser = new User(1, "asd@mail.com", "log in",
-            "Name", LocalDate.of(1999, 12, 31));
+    private final User wrongLoginUser = new User(1L, "asd@mail.com", "log in",
+            "Name", LocalDate.of(1999, 12, 31), Collections.emptySet());
 
     @Test
     public void shouldThrowIncorrectBirthdayException() {

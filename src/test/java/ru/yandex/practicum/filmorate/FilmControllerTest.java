@@ -21,6 +21,7 @@ public class FilmControllerTest {
             .description("EmptyNameFilm")
             .id(1)
             .duration(190)
+            .likesId(null)
             .build();
     private final Film negativeDurationFilm = Film.builder()
             .name("Name")
@@ -28,6 +29,7 @@ public class FilmControllerTest {
             .description("NegativeDurationFilm")
             .id(1)
             .duration(-5)
+            .likesId(null)
             .build();
 
     private final Film tooMuchOldFilm = Film.builder()
@@ -36,6 +38,7 @@ public class FilmControllerTest {
             .description("TooMuchOldFilm")
             .id(1)
             .duration(190)
+            .likesId(null)
             .build();
 
 
