@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -39,8 +41,8 @@ public class FilmService {
         userStorage.getUserById(userId);
         Set<Long> likesId = filmToPut.getLikesId();
         likesId.add(userId);
-        filmStorage.updateFilm(new Film(filmToPut.getId(), filmToPut.getName(), filmToPut.getDescription(),
-                filmToPut.getReleaseDate(), filmToPut.getDuration(), likesId));
+        filmStorage.updateFilm(new Film(filmToPut.getId(), filmToPut.getTitle(), filmToPut.getDescription(),
+                filmToPut.getReleaseDate(), filmToPut.getDuration(), likesId, Genre.ACTION, Rating.R));
         return filmStorage.getFilmById(filmId);
     }
 

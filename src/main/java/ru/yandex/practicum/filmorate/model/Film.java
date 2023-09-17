@@ -17,9 +17,21 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode
 public class Film {
+
+    public Film(long id, String title, String description, LocalDate releaseDate, int duration, Set<Long> likesId, Genre genre, Rating rating) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.likesId = Objects.requireNonNullElseGet(likesId, HashSet::new);
+        this.genre = genre;
+        this.rating = rating;
+    }
+
     long id;
     @NotBlank(message = "must not be blank")
-    String name;
+    String title;
     @Size(message = "size must be between 0 and 200",
             max = 200)
     String description;
@@ -28,15 +40,8 @@ public class Film {
     @Min(value = 0, message = "must be greater than or equal to 0")
     int duration;
     Set<Long> likesId;
-
-    public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likesId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.likesId = Objects.requireNonNullElseGet(likesId, HashSet::new);
-    }
+    Genre genre;
+    Rating rating;
 
     public Set<Long> getLikesId() {
         return new HashSet<>(likesId);

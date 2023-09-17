@@ -24,7 +24,7 @@ public class FilmControllerTest {
             .likesId(null)
             .build();
     private final Film negativeDurationFilm = Film.builder()
-            .name("Name")
+            .title("Name")
             .releaseDate(LocalDate.of(1999, 12, 5))
             .description("NegativeDurationFilm")
             .id(1)
@@ -33,7 +33,7 @@ public class FilmControllerTest {
             .build();
 
     private final Film tooMuchOldFilm = Film.builder()
-            .name("Name")
+            .title("Name")
             .releaseDate(LocalDate.of(1850, 12, 5))
             .description("TooMuchOldFilm")
             .id(1)
@@ -69,7 +69,7 @@ public class FilmControllerTest {
             longDescription.append(longDescription);
         }
         final Film tooLongDescriptionFilm = Film.builder()
-                .name("Name")
+                .title("Name")
                 .releaseDate(LocalDate.of(1999, 12, 5))
                 .description(longDescription.toString())
                 .id(1)
