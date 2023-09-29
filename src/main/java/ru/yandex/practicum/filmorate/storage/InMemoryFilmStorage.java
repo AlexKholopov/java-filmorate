@@ -3,8 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.SearchedObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +18,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
     private final Set<Film> sortedFilms = new TreeSet<>((f1, f2) -> {
         if (f1.getLikesId().size() == f2.getLikesId().size()) {
-            return String.CASE_INSENSITIVE_ORDER.compare(f1.getTitle(), f2.getTitle());
+            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
         } else {
             return -1 * (f1.getLikesId().size() - f2.getLikesId().size());
         }
@@ -30,9 +28,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film getFilmById(Long id) {
         if (films.containsKey(id)) {
             Film film = films.get(id);
-            return new Film(film.getId(), film.getTitle(),
+            return new Film(film.getId(), film.getName(),
                     film.getDescription(), film.getReleaseDate(),
-                    film.getDuration(), film.getLikesId(), Genre.ACTION, Rating.R);
+                    film.getDuration(), film.getLikesId(), film.getGenres(), film.getRating());
         } else {
             throw new SearchedObjectNotFoundException("Film with id = " + id + " not found");
         }
@@ -50,14 +48,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        Film filmToAdd = Film.builder()
-                .id(idCounter++)
-                .title(film.getTitle())
-                .description(film.getDescription())
-                .releaseDate(film.getReleaseDate())
-                .duration(film.getDuration())
-                .likesId(film.getLikesId())
-                .build();
+        Film filmToAdd = new Film(idCounter++, film.getName(), film.getDescription(), film.getReleaseDate(),
+                film.getDuration(), film.getLikesId(), film.getGenres(), film.getRating());
         films.put(filmToAdd.getId(), filmToAdd);
         sortedFilms.add(filmToAdd);
         return filmToAdd;
@@ -65,14 +57,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        Film filmToAdd = Film.builder()
-                .id(film.getId())
-                .title(film.getTitle())
-                .description(film.getDescription())
-                .releaseDate(film.getReleaseDate())
-                .duration(film.getDuration())
-                .likesId(film.getLikesId())
-                .build();
+        Film filmToAdd = new Film(film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(),
+                film.getDuration(), film.getLikesId(), film.getGenres(), film.getRating());
         sortedFilms.remove(films.get(film.getId()));
         films.replace(film.getId(), filmToAdd);
         sortedFilms.add(filmToAdd);

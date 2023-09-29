@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import ru.yandex.practicum.filmorate.service.ReleaseDate;
@@ -14,24 +13,24 @@ import java.util.Objects;
 import java.util.Set;
 
 @Value
-@Builder
 @EqualsAndHashCode
 public class Film {
 
-    public Film(long id, String title, String description, LocalDate releaseDate, int duration, Set<Long> likesId, Genre genre, Rating rating) {
+    public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likesId,
+                Set<Genre> genres, Rating rating) {
         this.id = id;
-        this.title = title;
+        this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.likesId = Objects.requireNonNullElseGet(likesId, HashSet::new);
-        this.genre = genre;
+        this.genres = Objects.requireNonNullElseGet(genres, HashSet::new);
         this.rating = rating;
     }
 
     long id;
     @NotBlank(message = "must not be blank")
-    String title;
+    String name;
     @Size(message = "size must be between 0 and 200",
             max = 200)
     String description;
@@ -40,7 +39,7 @@ public class Film {
     @Min(value = 0, message = "must be greater than or equal to 0")
     int duration;
     Set<Long> likesId;
-    Genre genre;
+    Set<Genre> genres;
     Rating rating;
 
     public Set<Long> getLikesId() {

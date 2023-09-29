@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,30 +20,16 @@ public class FilmControllerTest {
 
     @Autowired
     private ValidatingService service;
-    private final Film emptyNameFilm = Film.builder()
-            .releaseDate(LocalDate.of(1999, 12, 5))
-            .description("EmptyNameFilm")
-            .id(1)
-            .duration(190)
-            .likesId(null)
-            .build();
-    private final Film negativeDurationFilm = Film.builder()
-            .title("Name")
-            .releaseDate(LocalDate.of(1999, 12, 5))
-            .description("NegativeDurationFilm")
-            .id(1)
-            .duration(-5)
-            .likesId(null)
-            .build();
+    private final Film emptyNameFilm = new Film(1L, "", "EmptyNameFilm",
+            LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
+            new Rating(2));
+    private final Film negativeDurationFilm = new Film(1L, "Name", "NegativeDurationFilm",
+            LocalDate.of(1999, 12, 5), -5, Collections.emptySet(), Set.of(new Genre(1)),
+            new Rating(2));
 
-    private final Film tooMuchOldFilm = Film.builder()
-            .title("Name")
-            .releaseDate(LocalDate.of(1850, 12, 5))
-            .description("TooMuchOldFilm")
-            .id(1)
-            .duration(190)
-            .likesId(null)
-            .build();
+    private final Film tooMuchOldFilm = new Film(1L, "Name", "TooMuchOldFilm",
+            LocalDate.of(1850, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
+            new Rating(2));
 
 
 
@@ -68,13 +58,9 @@ public class FilmControllerTest {
         while (longDescription.toString().length() < 200) {
             longDescription.append(longDescription);
         }
-        final Film tooLongDescriptionFilm = Film.builder()
-                .title("Name")
-                .releaseDate(LocalDate.of(1999, 12, 5))
-                .description(longDescription.toString())
-                .id(1)
-                .duration(190)
-                .build();
+        final Film tooLongDescriptionFilm = new Film(1L, "Name", longDescription.toString(),
+                LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
+                new Rating(2));
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(tooLongDescriptionFilm));
