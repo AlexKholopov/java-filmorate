@@ -62,7 +62,7 @@ public class FilmDbStorage implements FilmStorage {
             ps.setString(2, film.getDescription());
             ps.setInt(3, film.getDuration());
             ps.setDate(4, Date.valueOf(film.getReleaseDate()));
-            ps.setInt(5, film.getRating().getId());
+            ps.setInt(5, film.getMpa().getId());
             return ps;
         }, keyHolder);
         long id;
@@ -72,7 +72,7 @@ public class FilmDbStorage implements FilmStorage {
             throw new RuntimeException("Server error. Film wasn't made");
         }
         Film film1 = new Film(id, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration(), film.getLikesId(), film.getGenres(), film.getRating());
+                film.getReleaseDate(), film.getDuration(), film.getLikesId(), film.getGenres(), film.getMpa());
         updateGenre(film1);
         return getFilmById(id);
     }
@@ -88,7 +88,7 @@ public class FilmDbStorage implements FilmStorage {
             ps.setString(2, film.getDescription());
             ps.setInt(3, film.getDuration());
             ps.setDate(4, Date.valueOf(film.getReleaseDate()));
-            ps.setInt(5, film.getRating().getId());
+            ps.setInt(5, film.getMpa().getId());
             ps.setLong(6, film.getId());
             return ps;
         });

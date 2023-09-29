@@ -17,7 +17,7 @@ import java.util.Set;
 public class Film {
 
     public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likesId,
-                Set<Genre> genres, Rating rating) {
+                Set<Genre> genres, Rating mpa) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -25,7 +25,7 @@ public class Film {
         this.duration = duration;
         this.likesId = Objects.requireNonNullElseGet(likesId, HashSet::new);
         this.genres = Objects.requireNonNullElseGet(genres, HashSet::new);
-        this.rating = rating;
+        this.mpa = mpa;
     }
 
     long id;
@@ -40,7 +40,7 @@ public class Film {
     int duration;
     Set<Long> likesId;
     Set<Genre> genres;
-    Rating rating;
+    Rating mpa;
 
     public Set<Long> getLikesId() {
         return new HashSet<>(likesId);

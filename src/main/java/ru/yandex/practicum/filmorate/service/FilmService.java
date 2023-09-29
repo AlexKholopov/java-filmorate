@@ -56,7 +56,7 @@ public class FilmService {
         likesId.add(userId);
         filmStorage.updateFilm(new Film(filmToPut.getId(), filmToPut.getName(),
                 filmToPut.getDescription(), filmToPut.getReleaseDate(), filmToPut.getDuration(),
-                likesId, filmToPut.getGenres(), filmToPut.getRating()));
+                likesId, filmToPut.getGenres(), filmToPut.getMpa()));
         return filmStorage.getFilmById(filmId);
     }
 
@@ -70,7 +70,7 @@ public class FilmService {
         likesId.remove(userId);
         filmStorage.updateFilm(new Film(filmToPut.getId(), filmToPut.getName(),
                 filmToPut.getDescription(), filmToPut.getReleaseDate(), filmToPut.getDuration(),
-                likesId, filmToPut.getGenres(), filmToPut.getRating()));
+                likesId, filmToPut.getGenres(), filmToPut.getMpa()));
         return filmStorage.getFilmById(filmId);
     }
 
