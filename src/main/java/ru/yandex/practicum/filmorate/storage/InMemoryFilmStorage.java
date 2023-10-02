@@ -30,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             Film film = films.get(id);
             return new Film(film.getId(), film.getName(),
                     film.getDescription(), film.getReleaseDate(),
-                    film.getDuration(), film.getLikesId());
+                    film.getDuration(), film.getLikesId(), film.getGenres(), film.getMpa());
         } else {
             throw new SearchedObjectNotFoundException("Film with id = " + id + " not found");
         }
@@ -48,14 +48,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        Film filmToAdd = Film.builder()
-                .id(idCounter++)
-                .name(film.getName())
-                .description(film.getDescription())
-                .releaseDate(film.getReleaseDate())
-                .duration(film.getDuration())
-                .likesId(film.getLikesId())
-                .build();
+        Film filmToAdd = new Film(idCounter++, film.getName(), film.getDescription(), film.getReleaseDate(),
+                film.getDuration(), film.getLikesId(), film.getGenres(), film.getMpa());
         films.put(filmToAdd.getId(), filmToAdd);
         sortedFilms.add(filmToAdd);
         return filmToAdd;
@@ -63,14 +57,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        Film filmToAdd = Film.builder()
-                .id(film.getId())
-                .name(film.getName())
-                .description(film.getDescription())
-                .releaseDate(film.getReleaseDate())
-                .duration(film.getDuration())
-                .likesId(film.getLikesId())
-                .build();
+        Film filmToAdd = new Film(film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(),
+                film.getDuration(), film.getLikesId(), film.getGenres(), film.getMpa());
         sortedFilms.remove(films.get(film.getId()));
         films.replace(film.getId(), filmToAdd);
         sortedFilms.add(filmToAdd);
