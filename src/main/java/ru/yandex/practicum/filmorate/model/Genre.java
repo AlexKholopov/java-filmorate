@@ -12,7 +12,7 @@ public class Genre {
     @Max(6)
     @Positive
     private final int id;
-    private final GENRE_NAME name;
+    private final GenreName name;
 
 
     public Genre(int id, String name) {
@@ -20,12 +20,12 @@ public class Genre {
         if (name == null) {
             this.name = null;
         } else {
-            this.name = GENRE_NAME.valueOf(name);
+            this.name = GenreName.valueOf(name);
         }
     }
 
     public String getName() {
-        if (name == null){
+        if (name == null) {
             return null;
         } else {
             return name.filmName;
@@ -33,7 +33,7 @@ public class Genre {
     }
 
 
-    private enum GENRE_NAME {
+    private enum GenreName {
         COMEDY("Комедия"),
         THRILLER("Триллер"),
         ACTION("Боевик"),
@@ -43,7 +43,7 @@ public class Genre {
 
         private final String filmName;
 
-        GENRE_NAME(String filmName) {
+        GenreName(String filmName) {
             this.filmName = filmName;
         }
 

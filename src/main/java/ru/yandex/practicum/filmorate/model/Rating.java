@@ -14,19 +14,19 @@ public class Rating {
     @Max(5)
     @Positive
     private final int id;
-    private final RATINGS_NAME name;
+    private final RatingsName name;
 
     public Rating(int id, String name) {
         this.id = id;
         if (name == null) {
             this.name = null;
         } else {
-            this.name = RATINGS_NAME.valueOf(name);
+            this.name = RatingsName.valueOf(name);
         }
     }
 
     public String getName() {
-        if (name == null){
+        if (name == null) {
             return null;
         } else {
             return name.filmRating;
@@ -34,7 +34,7 @@ public class Rating {
     }
 
 
-    private enum RATINGS_NAME {
+    private enum RatingsName {
         G("G"),
         PG("PG"),
         PG_13("PG-13"),
@@ -43,7 +43,7 @@ public class Rating {
 
         private final String filmRating;
 
-        RATINGS_NAME(String filmRating) {
+        RatingsName(String filmRating) {
             this.filmRating = filmRating;
         }
 
