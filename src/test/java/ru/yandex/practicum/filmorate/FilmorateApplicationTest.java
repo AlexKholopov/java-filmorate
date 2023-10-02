@@ -88,17 +88,17 @@ class FilmorateApplicationTest {
     public void filmStorageTest() {
         Film film = new Film(1L, "Name", "Description",
                 LocalDate.of(1999, 12, 5), 190, Collections.emptySet(),
-                Set.of(new Genre(1)), new Rating(2));
+                Set.of(new Genre(1, "COMEDY")), new Rating(2, "PG"));
         Film film1 = new Film(2L, "Name2", "Description2",
                 LocalDate.of(1999, 12, 5), 190, Collections.emptySet(),
-                Set.of(new Genre(2)), new Rating(3));
+                Set.of(new Genre(2, "DRAMA")), new Rating(3, "PG_13"));
 
         filmStorage.createFilm(new Film(1L, "Name", "Description",
                 LocalDate.of(1999, 12, 5), 190, Collections.emptySet(),
-                Set.of(new Genre(1)), new Rating(2)));
+                Set.of(new Genre(1, "COMEDY")), new Rating(2, "PG")));
         filmStorage.createFilm(new Film(2L, "Name2", "Description2",
                 LocalDate.of(1999, 12, 5), 190, Collections.emptySet(),
-                Set.of(new Genre(2)), new Rating(3)));
+                Set.of(new Genre(2, "DRAMA")), new Rating(3, "PG_13")));
 
         Film filmToCheck = filmStorage.getFilmById(1L);
         assertEquals(film, filmToCheck, "Wrong upload film");
@@ -106,7 +106,7 @@ class FilmorateApplicationTest {
 
         film = new Film(1L, "NameNew", "DescriptionNew",
                 LocalDate.of(1999, 12, 15), 190, Collections.emptySet(),
-                Set.of(new Genre(3)), new Rating(4));
+                Set.of(new Genre(3, "CARTOON")), new Rating(4, "R"));
         filmStorage.updateFilm(film);
 
         filmToCheck = filmStorage.getFilmById(1L);
@@ -119,20 +119,21 @@ class FilmorateApplicationTest {
 
     @Test
     public void genreStorageTest() {
-        List<Genre> genreList = List.of(new Genre(1), new Genre(2), new Genre(3),
-                new Genre(4), new Genre(5), new Genre(6));
+        List<Genre> genreList = List.of(new Genre(1, "COMEDY"), new Genre(2, "DRAMA"), new Genre(3, "CARTOON"),
+                new Genre(4, "THRILLER"), new Genre(5, "DOCUMENTARY"), new Genre(6, "ACTION"));
         assertAll("Genre check",
                 () -> assertArrayEquals(new List[]{genreList}, new List[]{genreStorage.getGenres()}, "Wrong genre list"),
-                () -> assertEquals(new Genre(1), genreStorage.getGenreById(1), "Wrong genre by id")
+                () -> assertEquals(new Genre(1, "COMEDY"), genreStorage.getGenreById(1), "Wrong genre by id")
         );
     }
 
     @Test
     public void ratingStorageTest() {
-        List<Rating> ratingList = List.of(new Rating(1), new Rating(2), new Rating(3), new Rating(4), new Rating(5));
+        List<Rating> ratingList = List.of(new Rating(1, "G"), new Rating(2, "PG"),
+                new Rating(3, "PG_13"), new Rating(4, "R"), new Rating(5, "NC_17"));
         assertAll("Rating check",
                 () -> assertArrayEquals(new List[]{ratingList}, new List[]{ratingStorage.getRatings()}, "Wrong rating list"),
-                () -> assertEquals(new Rating(1), ratingStorage.getRatingById(1), "Wrong rating by id")
+                () -> assertEquals(new Rating(1, "G"), ratingStorage.getRatingById(1), "Wrong rating by id")
         );
     }
 }

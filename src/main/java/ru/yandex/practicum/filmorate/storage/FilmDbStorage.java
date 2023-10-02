@@ -71,9 +71,7 @@ public class FilmDbStorage implements FilmStorage {
         } catch (NullPointerException e) {
             throw new RuntimeException("Server error. Film wasn't made");
         }
-        Film film1 = new Film(id, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration(), film.getLikesId(), film.getGenres(), film.getMpa());
-        updateGenre(film1);
+        updateGenre(id, film.getGenres());
         return getFilmById(id);
     }
 
@@ -93,33 +91,28 @@ public class FilmDbStorage implements FilmStorage {
             return ps;
         });
         updateLikes(film);
-        updateGenre(film);
+        updateGenre(film.getId(), film.getGenres());
         return getFilmById(film.getId());
     }
 
-    /*
-    Я очень долго пытался найти нормальный способ добавить жанры, но так и не нашел
-    Если я правильно понимаю, то в Н2 нет синтаксиса ON CONFLICT
-    И поэтому приходится полностью всё удалять и заполнять по новой
-    Если есть какой-то адекватный вариант как это сделать я с радостью, но к сожалению сам не нашел...
-     */
-    private void updateGenre(Film film) {
-        jdbcTemplate.execute("DELETE FROM films_genre WHERE film_id = " + film.getId());
-        if (film.getGenres().isEmpty()) {
+
+    private void updateGenre(long filmId, Set<Genre> genres) {
+        jdbcTemplate.execute("DELETE FROM films_genre WHERE film_id = " + filmId);
+        if (genres.isEmpty()) {
             return;
         }
         try {
-            StringBuilder sqlGenres = new StringBuilder("INSERT INTO films_genre (film_id, genre_id) VALUES ");
-            for (Genre genre : film.getGenres()) {
-                sqlGenres.append("(")
-                        .append(film.getId())
+            StringBuilder sqlGenresBuilder = new StringBuilder("INSERT INTO films_genre (film_id, genre_id) VALUES ");
+            for (Genre genre : genres) {
+                sqlGenresBuilder.append("(")
+                        .append(filmId)
                         .append(", ")
                         .append(genre.getId())
                         .append("), ");
             }
-            String genres = sqlGenres.toString();
-            genres = genres.substring(0, genres.lastIndexOf(','));
-            jdbcTemplate.execute(genres);
+            String sqlGenres = sqlGenresBuilder.toString();
+            sqlGenres = sqlGenres.substring(0, sqlGenres.lastIndexOf(','));
+            jdbcTemplate.execute(sqlGenres);
         } catch (Exception e) {
             throw new SearchedObjectNotFoundException("No such genre was found");
         }
@@ -152,17 +145,26 @@ public class FilmDbStorage implements FilmStorage {
                 (rsl, RowNum) -> rsl.getLong("user_id"), rs.getString("id")));
 
         Set<Genre> genres = new HashSet<>(jdbcTemplate.query(
-                "SELECT genre_id FROM films_genre WHERE film_id = ? ORDER BY genre_id",
+                "SELECT * FROM films_genre AS fg LEFT JOIN genre AS g ON fg.genre_id = g.id" +
+                        " WHERE fg.film_id = ? ORDER BY fg.genre_id",
                 (rsg, RowNum) -> getGenre(rsg), rs.getLong("id")));
 
-        Rating rating = new Rating(rs.getInt("rating_id"));
+        Rating rating = jdbcTemplate.queryForObject("SELECT * FROM rating WHERE id = ?",
+                (rsr, RowNum) -> getRating(rsr), rs.getInt("rating_id"));
 
-        return new Film(rs.getLong("id"), rs.getString("title"),
+        Film film = new Film(rs.getLong("id"), rs.getString("title"),
                 rs.getString("description"), rs.getDate("release_date").toLocalDate(),
                 rs.getInt("duration"), likes, genres, rating);
+        System.out.println(film);
+
+        return film;
     }
 
     private Genre getGenre(ResultSet rs) throws SQLException {
-        return new Genre(rs.getInt("genre_id"));
+        return new Genre(rs.getInt("genre_id"), rs.getString("name"));
+    }
+
+    private Rating getRating(ResultSet rs) throws SQLException {
+        return new Rating(rs.getInt("id"), rs.getString("name"));
     }
 }

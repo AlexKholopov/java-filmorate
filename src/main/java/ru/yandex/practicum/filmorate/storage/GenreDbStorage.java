@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.SearchedObjectNotFoundException;
@@ -26,12 +27,12 @@ public class GenreDbStorage implements GenreStorage {
         String sql = "SELECT * FROM genre WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, RowNum) -> getGenre(rs), id);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             throw new SearchedObjectNotFoundException("Genre with id = " + id + " not found");
         }
     }
 
     private Genre getGenre(ResultSet rs) throws SQLException {
-        return new Genre(rs.getInt("id"));
+        return new Genre(rs.getInt("id"), rs.getString("name"));
     }
 }

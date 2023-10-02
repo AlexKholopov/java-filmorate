@@ -1,5 +1,5 @@
 INSERT INTO rating (name)
-VALUES ('G'), ('PG'), ('PG-13'), ('R'), ('NC-17');
+VALUES ('G'), ('PG'), ('PG_13'), ('R'), ('NC_17');
 
 INSERT INTO genre (name)
-VALUES ('Комедия'), ('Драма'), ('Мультфильм'), ('Триллер'), ('Документальный'), ('Боевик');
+VALUES ('COMEDY'), ('DRAMA'), ('CARTOON'), ('THRILLER'), ('DOCUMENTARY'), ('ACTION');

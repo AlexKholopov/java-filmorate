@@ -21,15 +21,15 @@ public class FilmControllerTest {
     @Autowired
     private ValidatingService service;
     private final Film emptyNameFilm = new Film(1L, "", "EmptyNameFilm",
-            LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
-            new Rating(2));
+            LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1, "COMEDY")),
+            new Rating(2, "PG"));
     private final Film negativeDurationFilm = new Film(1L, "Name", "NegativeDurationFilm",
-            LocalDate.of(1999, 12, 5), -5, Collections.emptySet(), Set.of(new Genre(1)),
-            new Rating(2));
+            LocalDate.of(1999, 12, 5), -5, Collections.emptySet(), Set.of(new Genre(1, "COMEDY")),
+            new Rating(2, "PG"));
 
     private final Film tooMuchOldFilm = new Film(1L, "Name", "TooMuchOldFilm",
-            LocalDate.of(1850, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
-            new Rating(2));
+            LocalDate.of(1850, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1, "COMEDY")),
+            new Rating(2, "PG"));
 
 
 
@@ -59,8 +59,8 @@ public class FilmControllerTest {
             longDescription.append(longDescription);
         }
         final Film tooLongDescriptionFilm = new Film(1L, "Name", longDescription.toString(),
-                LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1)),
-                new Rating(2));
+                LocalDate.of(1999, 12, 5), 190, Collections.emptySet(), Set.of(new Genre(1, "COMEDY")),
+                new Rating(2, "PG"));
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
                 () -> service.validateInputWithInjectedValidator(tooLongDescriptionFilm));

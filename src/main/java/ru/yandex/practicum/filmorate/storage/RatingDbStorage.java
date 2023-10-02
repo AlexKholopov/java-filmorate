@@ -35,6 +35,6 @@ public class RatingDbStorage implements RatingStorage {
     }
 
     private Rating getRating(ResultSet rs) throws SQLException {
-        return new Rating(rs.getInt("id"));
+        return new Rating(rs.getInt("id"), rs.getString("name"));
     }
 }
